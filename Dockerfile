@@ -1,5 +1,7 @@
 FROM python:3.12-alpine
 
+ENV PYTHONUNBUFFERED=1
+
 RUN apk add curl postgresql-dev
 
 WORKDIR /app/
