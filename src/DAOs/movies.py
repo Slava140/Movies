@@ -1,7 +1,8 @@
 from typing import Iterable
 
-from sqlalchemy import insert, select, text, desc
+from sqlalchemy import insert, select, text, desc, func
 from sqlalchemy.exc import IntegrityError
+
 
 from models.movies import MovieM
 from schemas.movies import InMovieS, OutMovieS
@@ -41,17 +42,44 @@ class MovieDAO:
             raise ValueError(f'Cannot insert entities. {error.orig}') from None
 
     @classmethod
-    def find_by_title(cls, title: str, size: int, more_first: bool, sort_by: str) -> list[OutMovieS]:
-        query = select(
-            cls.model
-        ).where(
-            cls.model.title.ilike(f'%{title}%')
-        ).order_by(
+    def get_movies(cls,
+                   *,
+                   title: str | None,
+                   limit: int,
+                   offset: int,
+                   more_first: bool,
+                   sort_by: str) -> list[OutMovieS]:
+        if title is None:
+            query = select(cls.model)
+        else:
+            query = select(
+                cls.model
+            ).where(
+                cls.model.title.ilike(f'%{title}%')
+            )
+
+        query = query.order_by(
             desc(text(sort_by)) if more_first else text(sort_by)
         ).limit(
-            size
+            limit
+        ).offset(
+            offset
         )
-
 
         result = db.session.execute(query).scalars().fetchall()
         return [OutMovieS(**movie_model.to_dict()) for movie_model in result]
+
+    @classmethod
+    def get_movies_count(cls, title: str | None) -> int:
+        query = select(
+            func.count()
+        ).select_from(
+            cls.model
+        )
+
+        if title is not None:
+            query = query.where(cls.model.title.ilike(f'%{title}%'))
+
+        result = db.session.execute(query).scalar_one()
+        return result
+

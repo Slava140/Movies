@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>show_id</th>
+        <th>type</th>
+        <th>title</th>
+        <th>director</th>
+        <th>cast</th>
+        <th>country</th>
+        <th>date_added</th>
+        <th>release_year</th>
+        <th>rating</th>
+        <th>duration</th>
+        <th>listed_in</th>
+        <th>description</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+    $(document).ready(function () {
+      $('#data').DataTable({
+        ajax: 'data/',
+        serverSide: true,
+        columns: [
+          {data: 'show_id', name: 'show_id', searchable: false},
+          {data: 'type', name: 'type', searchable: false},
+          {data: 'title', name: 'title'},
+          {data: 'director', name: 'director', searchable: false},
+          {data: 'cast', name: 'cast', searchable: false},
+          {data: 'country', name: 'country', searchable: false},
+          {data: 'date_added', name: 'date_added', searchable: false},
+          {data: 'release_year', name: 'release_year', searchable: false},
+          {data: 'rating', name: 'rating', searchable: false},
+          {data: 'duration', name: 'duration', searchable: false},
+          {data: 'listed_in', name: 'listed_in', searchable: false},
+          {data: 'description', name: 'description', searchable: false},
+        ],
+      });
+    });
+  </script>
+{% endblock %}

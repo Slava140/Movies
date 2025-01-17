@@ -51,23 +51,12 @@ class OutMovieS(BaseMovieS):
 
 #################
 
-@dataclasses.dataclass()
-class Default:
-    limit = 50
-    desc  = True
-    sort_by = 'release_year'
-
-
-def sorted_by_validator(value: str) -> str:
-    if value in MovieM.get_fields_names():
-        return value
-    return Default.sort_by
-
 
 class MoviesQS(BaseModel):
-    find:  str
-    limit: int  = Default.limit
-    desc:  bool = Default.desc
-    sort_by: Annotated[str, BeforeValidator(sorted_by_validator)] = Default.sort_by
-
-
+    draw:   int
+    start:  int
+    length: int
+    start:  int
+    search_value: Annotated[str, Field(alias='search[value]')]
+    order_by: Annotated[str, Field(alias='order[0][name]')] = 'release_year'
+    order_direction: Annotated[str, Field(alias='order[0][dir]')] = 'desc'
