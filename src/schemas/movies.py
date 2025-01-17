@@ -1,11 +1,9 @@
-import dataclasses
 import datetime
 from typing import Any, Annotated
 
-from pydantic import BaseModel, PositiveInt, field_validator, Field, BeforeValidator
+from pydantic import BaseModel, PositiveInt, Field, BeforeValidator
 
-from base_pydantic_types import StrFrom1To255, StrFrom1To30, StrFrom1To500, NotEmptyStr
-from models.movies import MovieM
+from base_pydantic_types import NotEmptyStr255, NotEmptyStr30, NotEmptyStr500, NotEmptyStr
 
 
 def show_id_validator(value: Any) -> str:
@@ -25,22 +23,22 @@ def duration_validator(value: str) -> int:
 
 
 class BaseMovieS(BaseModel):
-    show_id:        StrFrom1To30
-    type:           StrFrom1To255
-    title:          StrFrom1To255
-    director:       StrFrom1To500 | None
+    show_id:        NotEmptyStr30
+    type:           NotEmptyStr255
+    title:          NotEmptyStr255
+    director:       NotEmptyStr500 | None
     cast:           NotEmptyStr | None
-    country:        StrFrom1To500 | None
+    country:        NotEmptyStr500 | None
     date_added:     datetime.date | None
     release_year:   PositiveInt
-    rating:         StrFrom1To30 | None
+    rating: NotEmptyStr30 | None
     duration:       PositiveInt
-    listed_in:      StrFrom1To255
+    listed_in:      NotEmptyStr255
     description:    NotEmptyStr
 
 
 class InMovieS(BaseMovieS):
-    show_id:    Annotated[StrFrom1To30,         BeforeValidator(show_id_validator)]
+    show_id:    Annotated[NotEmptyStr30,         BeforeValidator(show_id_validator)]
     date_added: Annotated[datetime.date | None, BeforeValidator(date_added_validator)]
     duration:   Annotated[PositiveInt,          BeforeValidator(duration_validator)]
 
